@@ -39,7 +39,7 @@
 #include <sys/ioctl.h>
 #include <scsi/sg.h>
 #include <linux/hdreg.h>
-#include <netinet/in.h>
+#include <byteswap.h>
 
 // Application specific includes
 #include "satacmds.h"
@@ -80,8 +80,8 @@ int sata_pass_thru(int device, unsigned char *cmd, unsigned char *buffer) {
 
   ret = scsi_SG_IO(device, cdb, sizeof(cdb), buffer, cmd[3] * 512, sense, sizeof(sense), dxfer_direction);
  
-  /* Verify SATA magics */
-  if (sense[0] != 0x72 || sense[7] != 0x0e || sense[9] != 0x0e || sense[10] != 0x00)
+  /* Verify SATA magic */
+  if (sense[0] != 0x72)
     return 1;		  
   else 
     return ret;
@@ -95,10 +95,10 @@ void sata_fixstring(unsigned char *s, int bytecount)
   p = s;
   end = &s[bytecount & ~1]; /* bytecount must be even */
 
-  /* convert from big-endian to host byte order */
+  /* convert from big-endian to string order */
   for (p = end ; p != s;) {
     unsigned short *pp = (unsigned short *) (p -= 2);
-    *pp = ntohs(*pp);
+    *pp = bswap_16(*pp);
   }
 
   /* strip leading blanks */

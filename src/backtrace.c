@@ -16,9 +16,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#define _GNU_SOURCE
 #include <features.h>
 
-#if defined(__i386__) && defined(__GLIBC__)
+#if (defined(__i386__) || defined(__x86_64__)) && defined(__GLIBC__)
 
 #include <execinfo.h>
 
@@ -31,18 +32,21 @@
 #include <bits/sigcontext.h>
 #include <sys/param.h>
 
-#define __USE_GNU
 #include <ucontext.h>
+#if defined(__i386__)
+#  define REG_IP REG_EIP
+#elif defined(__x86_64__)
+#  define REG_IP REG_RIP
+#endif
 
 #define MAX_BTSIZE 64
 
 void backtrace_handler(int n, siginfo_t *ist, void *extra) {
-  static struct ucontext *puc;
+  static struct ucontext_t *puc;
   static void *btinfo[MAX_BTSIZE];
   static char **messages = NULL;
   static size_t btsize = 0;
   static size_t i;
-  static unsigned int old_eip, old_ebp;
   static char *strerr = "???";
   static FILE *fstrm;
 
@@ -52,19 +56,19 @@ void backtrace_handler(int n, siginfo_t *ist, void *extra) {
   if( (fstrm = fdopen(mkstemp(btpath), "w")) == NULL)
     return;
 
-#define SIC_CASE(c) case c: strerr = #c
+#define SIC_CASE(c) case c: strerr = #c ; break
 
-  puc = (struct ucontext *)extra;
+  puc = (struct ucontext_t *)extra;
   switch(n) {
   case SIGSEGV:
     switch(ist->si_code) {
       SIC_CASE(SEGV_MAPERR);
       SIC_CASE(SEGV_ACCERR);
     }
-    fprintf(fstrm, "=== SEGFAULT (%s) : invalid access to %p, in 0x%08x\n",
+    fprintf(fstrm, "=== SEGFAULT (%s) : invalid access to %p, in %p\n",
 	    strerr,
 	    ist->si_addr,
-	    puc->uc_mcontext.gregs[REG_EIP]);
+	    (void*)puc->uc_mcontext.gregs[REG_IP]);
     break;
   case SIGILL:
     switch(ist->si_code) {
@@ -77,10 +81,10 @@ void backtrace_handler(int n, siginfo_t *ist, void *extra) {
       SIC_CASE(ILL_COPROC);
       SIC_CASE(ILL_BADSTK);
     }
-    fprintf(fstrm, "=== ILLEGAL INSTR (%s) : invalid access to %p, in 0x%08x\n",
+    fprintf(fstrm, "=== ILLEGAL INSTR (%s) : invalid access to %p, in %p\n",
 	    strerr,
 	    ist->si_addr,
-	    puc->uc_mcontext.gregs[REG_EIP]);
+	    (void*)puc->uc_mcontext.gregs[REG_IP]);
     break;
   case SIGBUS:
     switch(ist->si_code) {
@@ -88,10 +92,10 @@ void backtrace_handler(int n, siginfo_t *ist, void *extra) {
       SIC_CASE(BUS_ADRERR);
       SIC_CASE(BUS_OBJERR);
     }
-    fprintf(fstrm, "=== BUS ERROR (%p) : invalid access to %p, in 0x%08x\n",
+    fprintf(fstrm, "=== BUS ERROR (%p) : invalid access to %p, in %p\n",
 	    strerr,
 	    ist->si_addr,
-	    puc->uc_mcontext.gregs[REG_EIP]);
+	    (void*)puc->uc_mcontext.gregs[REG_IP]);
     break;
   }
   fflush(fstrm);
@@ -101,7 +105,7 @@ void backtrace_handler(int n, siginfo_t *ist, void *extra) {
   /*
     old_eip = *(unsigned int*)((void*)&n-4);
     old_ebp = *(unsigned int*)((void*)&n-8);
-    *(unsigned int*)((void*)&n-4) = puc->uc_mcontext.gregs[REG_EIP];
+    *(unsigned int*)((void*)&n-4) = puc->uc_mcontext.gregs[REG_IP];
     *(unsigned int*)((void*)&n-8) = puc->uc_mcontext.gregs[REG_EBP];    
     
     btsize = backtrace(btinfo, MAX_BTSIZE);
@@ -111,14 +115,14 @@ void backtrace_handler(int n, siginfo_t *ist, void *extra) {
   */
   
   btsize = backtrace(btinfo, MAX_BTSIZE);
-  btinfo[1] = (void*) puc->uc_mcontext.gregs[REG_EIP];
+  btinfo[1] = (void*) puc->uc_mcontext.gregs[REG_IP];
 
   messages = backtrace_symbols(btinfo, btsize);
 
   for(i = 1;
       i < btsize;
       i++)
-    fprintf(fstrm, "[%d] #%d: %s\n", getpid(), i, messages[i]);
+    fprintf(fstrm, "[%d] #%zu: %s\n", getpid(), i, messages[i]);
   fflush(fstrm);
   fclose(fstrm);
 

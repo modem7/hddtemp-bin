@@ -1,0 +1,187 @@
+# Debconf translations for hddtemp.
+# Copyright (C) 2016 THE hddtemp'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the hddtemp package.
+# Tiago Bortoletto Vaz <tiago@debian-ba.org>, 2007.
+# Diego Neves <diego@diegoneves.eti.br>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: hddtemp_0.3-beta7-1\n"
+"Report-Msgid-Bugs-To: hddtemp@packages.debian.org\n"
+"POT-Creation-Date: 2008-01-25 22:35+0100\n"
+"PO-Revision-Date: 2016-08-31 20:51-0300\n"
+"Last-Translator: Diego Neves <diego@diegoneves.eti.br>\n"
+"Language-Team: Brazilian Portuguese <debian-l10n-portuguese@lists.debian."
+"org>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.8\n"
+
+#. Type: boolean
+#. Description
+#: ../templates:2001
+msgid "Should /usr/sbin/hddtemp be installed SUID root?"
+msgstr "O /usr/sbin/hddtemp deve ser instalado como SUID root?"
+
+#. Type: boolean
+#. Description
+#: ../templates:2001
+msgid ""
+"You have the option of installing hddtemp with the SUID bit set, allowing it "
+"to be run (reporting hard drive temperatures) by regular users and not only "
+"the superuser."
+msgstr ""
+"Você tem a opção de instalar o hddtemp com o bit SUID habilitado, permitindo "
+"que ele seja executado (relatando temperaturas de disco rígido) por usuários "
+"regulares e não apenas pelo superusuário."
+
+#. Type: boolean
+#. Description
+#: ../templates:2001
+msgid ""
+"This could potentially allow hddtemp to be used during an attack against the "
+"computer's security. If in doubt, do not choose this option."
+msgstr ""
+"Isso poderia potencialmente permitir que o hddtemp fosse usado durante um "
+"ataque contra a segurança do computador. Em caso de dúvida, não escolha essa "
+"opção."
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../templates:2001 ../templates:4001
+msgid ""
+"This setting can be modified later by running 'dpkg-reconfigure hddtemp'."
+msgstr ""
+"Essa configuração pode ser alterada mais tarde executando \"dpkg-reconfigure "
+"hddtemp\"."
+
+#. Type: string
+#. Description
+#: ../templates:3001
+msgid "Interval between hard drive temperature checks:"
+msgstr "Intervalo entre as verificações de temperatura do disco rígido:"
+
+#. Type: string
+#. Description
+#: ../templates:3001
+msgid ""
+"The temperature of the hard drive(s) can be logged by hddtemp via the "
+"generic system logging interface."
+msgstr ""
+"A temperatura do(s) disco(s) rígido(s) pode(m) ser registrada(s) pelo "
+"hddtemp através da interface genérica de registro do sistema."
+
+#. Type: string
+#. Description
+#: ../templates:3001
+msgid ""
+"Please enter a value in seconds corresponding to the interval between two "
+"checks. To disable this feature, enter 0."
+msgstr ""
+"Por favor, informe um valor, em segundos, correspondente ao intervalo entre "
+"duas verificações. Para desabilitar essa funcionalidade, informe 0."
+
+#. Type: boolean
+#. Description
+#: ../templates:4001
+msgid "Should the hddtemp daemon be started at boot?"
+msgstr "O daemon hddtemp deve ser iniciado na inicialização do sistema?"
+
+#. Type: boolean
+#. Description
+#: ../templates:4001
+msgid ""
+"The hddtemp program can be run as a daemon, listening on port 7634 for "
+"incoming connections. It is used by some software such as gkrellm to get the "
+"temperature of hard drives."
+msgstr ""
+"O programa hddtemp pode ser executado como um daemon, escutando na porta "
+"7634 por conexões de entrada. Isso é usado por alguns softwares, como o "
+"gkrellm, para obter a temperatura dos discos rígidos."
+
+#. Type: boolean
+#. Description
+#: ../templates:4001
+msgid ""
+"You have the option of starting the hddtemp daemon automatically on system "
+"boot. If in doubt, it is suggested to not start it automatically on boot."
+msgstr ""
+"Você tem a opção de iniciar o daemon hddtemp automaticamente na "
+"inicialização do sistema. Caso esteja em dúvida, é sugerido que você não o "
+"inicie automaticamente na inicialização do sistema."
+
+#. Type: string
+#. Description
+#: ../templates:5001
+msgid "Interface to listen on:"
+msgstr "Interface para escutar:"
+
+#. Type: string
+#. Description
+#: ../templates:5001
+msgid ""
+"The hddtemp program can listen for incoming connections on a specific "
+"interface, or on all interfaces."
+msgstr ""
+"O programa hddtemp pode escutar por conexões de entrada em uma interface "
+"específica ou em todas as interfaces."
+
+#. Type: string
+#. Description
+#: ../templates:5001
+msgid ""
+"To listen on a specific interface, enter the IP address of that interface  "
+"(choosing 127.0.0.1 will accept local connections only). To listen on all "
+"interfaces, enter 0.0.0.0."
+msgstr ""
+"Para escutar em uma interface específica, informe o endereço IP da interface "
+"em questão (escolher 127.0.0.1 aceitará somente conexões locais). Para "
+"escutar em todas as interfaces, informe 0.0.0.0."
+
+#. Type: string
+#. Description
+#: ../templates:6001
+msgid "Port to listen on:"
+msgstr "Porta para escutar:"
+
+#. Type: string
+#. Description
+#: ../templates:6001
+msgid ""
+"By default, hddtemp listens for incoming connections on port 7634. This can "
+"be changed for another port number."
+msgstr ""
+"Por padrão, o hddtemp escuta por conexões de entrada na porta 7634. Isso "
+"pode ser trocado para outro número de porta."
+
+#~ msgid "You have the option of installing hddtemp with the SUID bit set."
+#~ msgstr "Você tem a opção de instalar o hddtemp com o bit de SUID ligado."
+
+#~ msgid ""
+#~ "If you make hddtemp SUID, unprivileged users of your systems will be able "
+#~ "to run it. This could, however, potentially allow hddtemp to be used "
+#~ "during a security attack on  your computer. If in doubt, it is suggested  "
+#~ "to install it without SUID. If you later change your mind, you can run: "
+#~ "'dpkg-reconfigure hddtemp'."
+#~ msgstr ""
+#~ "Caso você permita que o hdddtemp seja instalado com o bit de SUID ligado, "
+#~ "usuários não privilegiados de seu sistema serão capazes de executá-lo. "
+#~ "Isso pode, porém, potencialmente permitir que o hddtemp seja usado "
+#~ "durante um ataque contra a segurança de seu computador. Caso esteja em "
+#~ "dúvida, é sugerido que vcê instale o hddtemp sem o bit de SUID ligado. "
+#~ "Caso você mude de idéia posteriormente, você poderá executar o comando "
+#~ "'dpkg-reconfigure hddtemp' para mudar essa suaconfiguração."
+
+#, fuzzy
+#~ msgid "At which interval do you want to log the temperatures?"
+#~ msgstr "Em qual interface você deseja que o hddtemp escute ?"
+
+#~ msgid "On which interface do you want hddtemp to listen on?"
+#~ msgstr "Em qual interface você deseja que o hddtemp escute ?"
+
+#~ msgid "On which port do you want hddtemp to listen on?"
+#~ msgstr "Em qual porta você deseja que o hddtemp escute ?"

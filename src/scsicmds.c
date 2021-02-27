@@ -147,6 +147,7 @@ int scsi_inquiry(int device, unsigned char *buffer)
     return 1;
   else {
     scsi_fixstring(buffer + 8, 24);
+    buffer[32] = 0;
     return 0;
   }
 }
