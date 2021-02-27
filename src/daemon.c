@@ -98,6 +98,9 @@ void daemon_open_sockets(void)
     /* Allow local port reuse in TIME_WAIT */
     setsockopt(sks_serv[sks_serv_num], SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 
+    /* Allow binding to a listen address that doesn't exist yet */
+    setsockopt(sks_serv[sks_serv_num], SOL_IP, IP_FREEBIND, &on, sizeof(on));
+
     /* Now we've got a socket - we need to bind it. */
     if (bind(sks_serv[sks_serv_num], resp->ai_addr, resp->ai_addrlen) < 0) {
       /* Nope, try another */
