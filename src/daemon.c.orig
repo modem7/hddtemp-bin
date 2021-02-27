@@ -368,7 +368,7 @@ void do_daemon_mode(struct disk *ldisks) {
       break;
     else if (ret == 0 && syslog_interval > 0) {
       daemon_syslog(ldisks);
-      next_time = time(NULL) + syslog_interval;
+      next_time += syslog_interval;
     }
     else if (tcp_daemon) {
       struct sockaddr_storage caddr;

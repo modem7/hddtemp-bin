@@ -36,14 +36,14 @@
 #include <string.h>
 #include <errno.h>
 #include <sys/ioctl.h>
-#include <scsi/scsi.h>
 #include <linux/hdreg.h>
 
 // Application specific includes
 #include "hddtemp.h"
-#include "satacmds.h"
-#include "scsicmds.h"
+#include "atacmds.h"
 
+
+#define SBUFF_SIZE 512
 #define swapb(x) \
 ({ \
         u16 __x = (x); \
@@ -52,80 +52,48 @@
                 (((u16)(__x) & (u16)0xff00U) >> 8) )); \
 })
 
- 
-static int sata_probe(int device) {
-  int bus_num;
-  unsigned char cmd[4] = { WIN_IDENTIFY, 0, 0, 1 };
-  unsigned char identify[512];
-  char buf[36]; /* should be 36 for unsafe devices (like USB mass storage stuff)
-                        otherwise they can lock up! SPC sections 7.4 and 8.6 */
- 
-  /* SATA disks are difficult to detect as they answer to both ATA and SCSI 
-     commands */
+static char sbuff[SBUFF_SIZE];
 
-  /* First check that the device is accessible through SCSI */
-  if(ioctl(device, SCSI_IOCTL_GET_BUS_NUMBER, &bus_num))
-    return 0;
-  
-  /* Get SCSI name and verify it starts with "ATA " */
-  if (scsi_inquiry(device, buf))
-    return 0;
-  else if (strncmp(buf + 8, "ATA ", 4))
-     return 0;
-
-  /* Verify that it supports ATA pass thru */
-  if (sata_pass_thru(device, cmd, identify) != 0)
+static int ata_probe(int device) {
+  if(device == -1 || ioctl(device, HDIO_GET_IDENTITY, sbuff))
     return 0;
   else
     return 1;
 }
 
-static const char *sata_model (int device) {
-  unsigned char cmd[4] = { WIN_IDENTIFY, 0, 0, 1 };
-  unsigned char identify[512];
-  
-  if(device == -1 || sata_pass_thru(device, cmd, identify))
+static const char *ata_model (int device) {
+  if(device == -1 || ioctl(device, HDIO_GET_IDENTITY, sbuff))
     return strdup(_("unknown"));
   else
-  {
-    sata_fixstring(identify + 54, 24);
-    return strdup(identify + 54);
-  }
+    return strdup((char*) ((u16*)sbuff + 27));
 }
 
-static unsigned char* sata_search_temperature(const unsigned char* smart_data, int attribute_id) {
-  int i, n;
 
-  n = 3;
-  i = 0;
-  while((debug || *(smart_data + n) != attribute_id) && i < 30) {
-    if(debug && *(smart_data + n))
-      printf(_("field(%d)\t = %d\n"), *(smart_data + n), *(smart_data + n + 3));
-
-    n += 12;
-    i++;
-  }
-
-  if(i >= 30)
-    return NULL;
-  else
-    return (unsigned char*)(smart_data + n);
-}
-
-static enum e_gettemp sata_get_temperature(struct disk *dsk) {   
-  unsigned char    values[512];
+static enum e_gettemp ata_get_temperature(struct disk *dsk) {   
+  unsigned char    values[512]/*, thresholds[512]*/;
   unsigned char *  field;
   int              i;
   u16 *            p;
+
+  switch(ata_get_powermode(dsk->fd)) {
+  case PWM_STANDBY:
+  case PWM_SLEEPING:
+    if (!wakeup)
+      return GETTEMP_DRIVE_SLEEP;
+  case PWM_UNKNOWN:
+  case PWM_ACTIVE: /* active or idle */
+  default:
+    break;
+  }
 
   if(dsk->db_entry && dsk->db_entry->attribute_id == 0) {
     close(dsk->fd);
     dsk->fd = -1;
     return GETTEMP_NOSENSOR;
   }
-  
+
   /* get SMART values */
-  if(sata_enable_smart(dsk->fd) != 0) {
+  if(ata_enable_smart(dsk->fd) != 0) {
     enum e_gettemp ret;
     if(errno == EIO) {
       snprintf(dsk->errormsg, MAX_ERRORMSG_SIZE, _("S.M.A.R.T. not available"));
@@ -141,7 +109,7 @@ static enum e_gettemp sata_get_temperature(struct disk *dsk) {
     return ret;
   }
 
-  if(sata_get_smart_values(dsk->fd, values)) {
+  if(ata_get_smart_values(dsk->fd, values)) {
     snprintf(dsk->errormsg, MAX_ERRORMSG_SIZE, "%s", strerror(errno));
     close(dsk->fd);
     dsk->fd = -1;
@@ -153,11 +121,24 @@ static enum e_gettemp sata_get_temperature(struct disk *dsk) {
     swapb(*(p+i));
   }
 
+  /* get SMART threshold values */
+  /*
+  if(get_smart_threshold_values(fd, thresholds)) {
+    perror("ioctl");
+    exit(3);
+  }
+
+  p = (u16*)thresholds;
+  for(i = 0; i < 256; i++) {
+    swapb(*(p+i));
+  }
+  */
+
   /* temperature */
   if(dsk->db_entry && dsk->db_entry->attribute_id > 0)
-    field = sata_search_temperature(values, dsk->db_entry->attribute_id);
+    field = ata_search_temperature(values, dsk->db_entry->attribute_id);
   else
-    field = sata_search_temperature(values, DEFAULT_ATTRIBUTE_ID);
+    field = ata_search_temperature(values, DEFAULT_ATTRIBUTE_ID);
 
   if(field)
     dsk->value = *(field+3);
@@ -180,9 +161,9 @@ static enum e_gettemp sata_get_temperature(struct disk *dsk) {
 /*******************************
  *******************************/
 
-struct bustype sata_bus = {
-  "SATA",
-  sata_probe,
-  sata_model,
-  sata_get_temperature
+struct bustype ata_bus = {
+  "PATA",
+  ata_probe,
+  ata_model,
+  ata_get_temperature
 };
