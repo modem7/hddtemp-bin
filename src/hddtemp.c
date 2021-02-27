@@ -61,6 +61,7 @@
 #include "utf8.h"
 #include "sata.h"
 #include "scsi.h"
+#include "nvme.h"
 #include "db.h"
 #include "hddtemp.h"
 #include "backtrace.h"
@@ -87,6 +88,7 @@ static void init_bus_types() {
   bus[BUS_SATA] = &sata_bus;
   bus[BUS_ATA] = &ata_bus;
   bus[BUS_SCSI] = &scsi_bus;
+  bus[BUS_NVME] = &nvme_bus;
 }
 
 /*******************************************************
@@ -130,6 +132,8 @@ static enum e_bustype probe_bus_type(struct disk *dsk) {
     return BUS_ATA;	  
   else if(bus[BUS_SCSI]->probe(dsk->fd))
     return BUS_SCSI;
+  else if (bus[BUS_NVME]->probe(dsk->fd))
+    return BUS_NVME;
   else
     return BUS_UNKNOWN;
 }
@@ -529,6 +533,7 @@ int main(int argc, char* argv[]) {
         dsk->db_entry->regexp       = "";
         dsk->db_entry->description  = "";
         dsk->db_entry->attribute_id = DEFAULT_ATTRIBUTE_ID;
+        dsk->db_entry->attribute_id2 = DEFAULT_ATTRIBUTE_ID2;
         dsk->db_entry->unit         = 'C';
         dsk->db_entry->next         = NULL;
       }

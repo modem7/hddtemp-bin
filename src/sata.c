@@ -167,6 +167,8 @@ static enum e_gettemp sata_get_temperature(struct disk *dsk) {
 
   /* temperature */
   field = sata_search_temperature(values, dsk->db_entry->attribute_id);
+  if(!field && dsk->db_entry->attribute_id2 != 0)
+    field = sata_search_temperature(values, dsk->db_entry->attribute_id2);
 
   if(field)
     dsk->value = *(field+3);

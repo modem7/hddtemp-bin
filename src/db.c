@@ -196,6 +196,7 @@ static int parse_db_line(char *line) {
   new_entry->regexp       = strdup(regexp);
   new_entry->description  = strdup(description);
   new_entry->attribute_id = value;
+  new_entry->attribute_id2 = 0;
   new_entry->unit         = unit;
   new_entry->next         = NULL;
   *last_entry = new_entry;

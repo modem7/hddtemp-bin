@@ -26,6 +26,7 @@
 struct harddrive_entry {
   char                   *regexp;
   short int              attribute_id;
+  short int              attribute_id2;
   char                   *description;
   unsigned char          unit;
   struct harddrive_entry *next;

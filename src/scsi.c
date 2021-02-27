@@ -84,6 +84,7 @@ static enum e_gettemp scsi_get_temperature(struct disk *dsk) {
   dsk->db_entry->regexp       = "";
   dsk->db_entry->description  = "";
   dsk->db_entry->attribute_id = 0;
+  dsk->db_entry->attribute_id2 = 0;
   dsk->db_entry->unit         = 'C';
   dsk->db_entry->next         = NULL;
 
