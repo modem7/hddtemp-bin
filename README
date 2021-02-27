@@ -1,8 +1,9 @@
 
 DESCRIPTION
 ===========
-hddtemp will show you the hard drive temperature if the hard drive can
-(modern drives support this feature).
+hddtemp will show you the hard drive temperature if the hard drive can.
+
+Since upstream doesn't handle patches, we will process pull requests here.
 
 
 COPYRIGHT
@@ -13,10 +14,9 @@ Please see COPYING file.
 
 INSTALLATION
 ============
-Run ./configure (see --help for options), then just type 'make' and don't forget
-to get the last hddtemp.db file on the site :
+Run ./configure (see --help for options), then just type 'make'.
 
-$ wget http://www.guzu.net/linux/hddtemp.db
+Latests hddtemp.db is located in the data dir.
 
 By default, the hddtemp.db will we searched in /usr/share/misc directory but
 you can change this at compilation time with the --with-db-path option:
@@ -56,9 +56,13 @@ The separator option allows to specify a separator in the case the drive's name
 contains the default separator. Be carefull not to use '?' or '*' which could
 exists in the reply of hddtemp.
 
-
 CONTACT
 =======
+
+New contact:
+Vitaly Lipatov <lav@etersoft.ru>
+
+Original author of the project:
 Emmanuel Varagnat: hddtemp@guzu.net
 
 http://www.guzu.net
