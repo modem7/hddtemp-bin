@@ -50,7 +50,7 @@ msgstr "%s: %s:  %d%sC или %sF\n"
 #: src/hddtemp.c:235
 #, c-format
 msgid "%s: %s: drive is sleeping\n"
-msgstr "%s: %s:  нет датчика\n"
+msgstr "%s: %s: диск в состоянии сна\n"
 
 #: src/hddtemp.c:242
 #, fuzzy, c-format
