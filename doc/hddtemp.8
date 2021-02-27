@@ -19,7 +19,7 @@
 hddtemp \- Utility to monitor hard drive temperature
 .SH SYNOPSIS
 .B hddtemp
-.RI [ options ] " [type:]disk" ...
+.RI [ options ] " [[type:]disk]" ...
 .SH "DESCRIPTION"
 .PP
 .B hddtemp 
@@ -35,7 +35,8 @@ You can specify one or more device drive path, where each path can be prefixed
 with a
 .B type
 like PATA, SATA or SCSI to force hddtemp too use one of these type
-(because detection can fail).
+(because detection can fail). If no paths are specified, autodetection of
+installed drives is attempted.
 
 
 .SH "OPTIONS"

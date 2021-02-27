@@ -54,6 +54,7 @@
 #include <linux/hdreg.h>
 #include <ctype.h>
 #include <assert.h>
+#include <glob.h>
 
 // Application specific includes
 #include "ata.h"
@@ -255,6 +256,7 @@ int main(int argc, char* argv[]) {
   int 		ret = 0;
   int           show_db;
   struct        disk * ldisks;
+  glob_t        diskglob;
 
   backtrace_sigsegv();
   backtrace_sigill();
@@ -420,11 +422,6 @@ int main(int argc, char* argv[]) {
      exit(0);
   }
   
-  if(argc - optind <= 0) {
-    fprintf(stderr, _("Too few arguments: you must specify one drive, at least.\n"));
-    exit(1);
-  }
-
   if(debug) {
     /*    argc = optind + 1;*/
     quiet = 1;
@@ -432,6 +429,23 @@ int main(int argc, char* argv[]) {
 
   if(debug && (tcp_daemon || syslog_interval != 0)) {
     fprintf(stderr, _("ERROR: can't use --debug and --daemon or --syslog options together.\n"));
+    exit(1);
+  }
+
+  memset(&diskglob, 0, sizeof(glob_t));
+  if(argc - optind <= 0) {
+    if(glob("/dev/[hs]d[a-z]", 0, NULL, &diskglob) == 0) {
+      argc = diskglob.gl_pathc;
+      argv = diskglob.gl_pathv;
+      optind = 0;
+    } else {
+      argc = 0;
+    }
+  }
+
+  if(argc - optind <= 0) {
+    globfree(&diskglob);
+    fprintf(stderr, _("Too few arguments: you must specify one drive, at least.\n"));
     exit(1);
   }
 
@@ -528,6 +542,7 @@ int main(int argc, char* argv[]) {
   else {
     do_direct_mode(ldisks);
   }
+  globfree(&diskglob);
 
   return ret;
 }
