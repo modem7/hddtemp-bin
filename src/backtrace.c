@@ -66,9 +66,9 @@ void backtrace_handler(int n, siginfo_t *ist, void *extra) {
       SIC_CASE(SEGV_ACCERR);
     }
     fprintf(fstrm, "=== SEGFAULT (%s) : invalid access to %p, in %p\n",
-	    strerr,
-	    ist->si_addr,
-	    (void*)puc->uc_mcontext.gregs[REG_IP]);
+        strerr,
+        ist->si_addr,
+        (void*)puc->uc_mcontext.gregs[REG_IP]);
     break;
   case SIGILL:
     switch(ist->si_code) {
@@ -82,9 +82,9 @@ void backtrace_handler(int n, siginfo_t *ist, void *extra) {
       SIC_CASE(ILL_BADSTK);
     }
     fprintf(fstrm, "=== ILLEGAL INSTR (%s) : invalid access to %p, in %p\n",
-	    strerr,
-	    ist->si_addr,
-	    (void*)puc->uc_mcontext.gregs[REG_IP]);
+        strerr,
+        ist->si_addr,
+        (void*)puc->uc_mcontext.gregs[REG_IP]);
     break;
   case SIGBUS:
     switch(ist->si_code) {
@@ -93,9 +93,9 @@ void backtrace_handler(int n, siginfo_t *ist, void *extra) {
       SIC_CASE(BUS_OBJERR);
     }
     fprintf(fstrm, "=== BUS ERROR (%p) : invalid access to %p, in %p\n",
-	    strerr,
-	    ist->si_addr,
-	    (void*)puc->uc_mcontext.gregs[REG_IP]);
+        strerr,
+        ist->si_addr,
+        (void*)puc->uc_mcontext.gregs[REG_IP]);
     break;
   }
   fflush(fstrm);
@@ -113,7 +113,7 @@ void backtrace_handler(int n, siginfo_t *ist, void *extra) {
     *(unsigned int*)((void*)&n-4) = old_eip;
     *(unsigned int*)((void*)&n-8) = old_ebp;
   */
-  
+
   btsize = backtrace(btinfo, MAX_BTSIZE);
   btinfo[1] = (void*) puc->uc_mcontext.gregs[REG_IP];
 

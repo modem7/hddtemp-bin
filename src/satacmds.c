@@ -63,7 +63,7 @@ int sata_pass_thru(int device, unsigned char *cmd, unsigned char *buffer) {
     cdb[2] = 0x2e;     /* no off.line, cc, read from dev, lock count in sector count field */
     dxfer_direction = SG_DXFER_FROM_DEV;
   } else {
-    cdb[1] = (3 << 1); /* Non-data */	  
+    cdb[1] = (3 << 1); /* Non-data */
     cdb[2] = 0x20;     /* cc */
     dxfer_direction = SG_DXFER_NONE;
   }
@@ -79,10 +79,10 @@ int sata_pass_thru(int device, unsigned char *cmd, unsigned char *buffer) {
   cdb[14] = cmd[0];
 
   ret = scsi_SG_IO(device, cdb, sizeof(cdb), buffer, cmd[3] * 512, sense, sizeof(sense), dxfer_direction);
- 
+
   /* Verify SATA magic */
   if (sense[0] != 0x72)
-    return 1;		  
+    return 1;
   else 
     return ret;
 }

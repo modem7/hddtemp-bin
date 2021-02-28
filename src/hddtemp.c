@@ -131,7 +131,7 @@ static enum e_bustype probe_bus_type(struct disk *dsk) {
   if(bus[BUS_SATA]->probe(dsk->fd))
     return BUS_SATA;
   else if(bus[BUS_ATA]->probe(dsk->fd))
-    return BUS_ATA;	  
+    return BUS_ATA;
   else if(bus[BUS_SCSI]->probe(dsk->fd))
     return BUS_SCSI;
   else if (bus[BUS_NVME]->probe(dsk->fd))
@@ -161,7 +161,7 @@ static void display_temperature(struct disk *dsk) {
 
   if(dsk->type != ERROR && debug ) {
     printf(_("\n================= hddtemp %s ==================\n"
-	     "Model: %s\n\n"), VERSION, dsk->model);
+           "Model: %s\n\n"), VERSION, dsk->model);
     /*    return;*/
   }
 
@@ -184,7 +184,7 @@ static void display_temperature(struct disk *dsk) {
   case GETTEMP_NOT_APPLICABLE:
 
     if (numeric && quiet)
-      printf("0\n");      
+      printf("0\n");
     else
       printf("%s: %s: %s\n", dsk->drive, dsk->model, dsk->errormsg);
 
@@ -193,13 +193,13 @@ static void display_temperature(struct disk *dsk) {
 
     if(!quiet)
       fprintf(stderr,
-	      _("WARNING: Drive %s doesn't seem to have a temperature sensor.\n"
-		"WARNING: This doesn't mean it hasn't got one.\n"
-		"WARNING: If you are sure it has one, please contact me (hddtemp@guzu.net).\n"
-		"WARNING: See --help, --debug and --drivebase options.\n"), dsk->drive);
+              _("WARNING: Drive %s doesn't seem to have a temperature sensor.\n"
+              "WARNING: This doesn't mean it hasn't got one.\n"
+              "WARNING: If you are sure it has one, please contact me (hddtemp@guzu.net).\n"
+              "WARNING: See --help, --debug and --drivebase options.\n"), dsk->drive);
 
     if (numeric && quiet)
-      printf("0\n");      
+      printf("0\n");
     else
       fprintf(stderr, _("%s: %s:  no sensor\n"), dsk->drive, dsk->model);
 
@@ -210,10 +210,10 @@ static void display_temperature(struct disk *dsk) {
        printf("%s: %s: %d%s%c\n",
               dsk->drive,
               dsk->model,
-	      value_to_unit(dsk),
+              value_to_unit(dsk),
               degree,
-	      get_unit(dsk)
-	      );
+              get_unit(dsk)
+             );
     else
        printf("%d\n", value_to_unit(dsk));
 
@@ -221,17 +221,17 @@ static void display_temperature(struct disk *dsk) {
   case GETTEMP_DRIVE_SLEEP:
 
     if (numeric && quiet)
-      printf("0\n");      
+      printf("0\n");
     else
       fprintf(stderr, _("%s: %s: drive is sleeping\n"), dsk->drive, dsk->model);
 
     break;
   case GETTEMP_NOSENSOR:
     if (numeric && quiet)
-      printf("0\n");      
+      printf("0\n");
     else
       fprintf(stderr, _("%s: %s:  drive supported, but it doesn't have a temperature sensor.\n"), dsk->drive, dsk->model);
-      
+
     break;
   default:
     fprintf(stderr, _("ERROR: %s: %s: unknown returned status\n"), dsk->drive, dsk->model);
@@ -247,19 +247,19 @@ void do_direct_mode(struct disk *ldisks) {
   for(dsk = ldisks; dsk; dsk = dsk->next) {
     display_temperature(dsk);
   }
-  
+
   if(debug) {
     printf(_("\n"
-	     "If one of the field value seems to match the temperature, be sure to read\n"
-	     "the hddtemp man page before sending a report (section REPORT). Thanks.\n"
-	     ));
+         "If one of the field value seems to match the temperature, be sure to read\n"
+         "the hddtemp man page before sending a report (section REPORT). Thanks.\n"
+         ));
   }
 }
 
 
 int main(int argc, char* argv[]) {
   int           i, c, lindex = 0, db_loaded = 0;
-  int 		ret = 0;
+  int           ret = 0;
   int           show_db;
   struct        disk * ldisks;
   glob_t        diskglob;
@@ -271,7 +271,7 @@ int main(int argc, char* argv[]) {
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
-  
+
   show_db = debug = numeric = quiet = wakeup = af_hint = syslog_interval = foreground = 0;
   unit = DEFAULT;
   portnum = PORT_NUMBER;
@@ -298,70 +298,70 @@ int main(int argc, char* argv[]) {
       {"wake-up",    0, NULL, 'w'},
       {0, 0, 0, 0}
     };
- 
+
     c = getopt_long (argc, argv, "bDdf:l:hp:qs:u:vnw46FS:", long_options, &lindex);
     if (c == -1)
       break;
-    
+
     switch (c) {
       case 'q':
-	quiet = 1;
-	break;
+        quiet = 1;
+        break;
       case '4':
-	af_hint = AF_INET;
-	break;
+        af_hint = AF_INET;
+        break;
       case '6':
-	af_hint = AF_INET6;
-	break;
+        af_hint = AF_INET6;
+        break;
       case 'b':
-	show_db = 1;
-	break;
+        show_db = 1;
+        break;
       case 'd':
-	tcp_daemon = 1;
-	break;
+        tcp_daemon = 1;
+        break;
       case 'D':
-	debug = 1;
-	break;
+        debug = 1;
+        break;
       case 'f':
-	database_path = optarg;
-	break;
+        database_path = optarg;
+        break;
       case 's':
-	separator = optarg[0];
-	if(separator == '\0') {
-	  fprintf(stderr, _("ERROR: invalid separator.\n"));
-	  exit(1);
-	}
-	break;
+        separator = optarg[0];
+        if(separator == '\0') {
+          fprintf(stderr, _("ERROR: invalid separator.\n"));
+          exit(1);
+        }
+        break;
       case 'p':
-	{
-	  char *end = NULL;
+        {
+          char *end = NULL;
 
-	  portnum = strtol(optarg, &end, 10);
+          portnum = strtol(optarg, &end, 10);
 
-	  if(errno == ERANGE || end == optarg || *end != '\0' || portnum < 1) {
-	    fprintf(stderr, _("ERROR: invalid port number.\n"));
-	    exit(1);
-	  }
-	}
-	break;
+          if(errno == ERANGE || end == optarg || *end != '\0' || portnum < 1) {
+            fprintf(stderr, _("ERROR: invalid port number.\n"));
+            exit(1);
+          }
+        }
+        break;
       case 'u':
-	switch(*optarg) {
-	case 'c':
-	case 'C':
-	  unit = CELSIUS;
-	  break;
-	case 'f':
-	case 'F':
-	  unit = FAHRENHEIT;
-	  break;
-	}
-	break;
+        switch(*optarg) {
+        case 'c':
+        case 'C':
+          unit = CELSIUS;
+          break;
+        case 'f':
+        case 'F':
+          unit = FAHRENHEIT;
+          break;
+        }
+        break;
       case 'l':
-	listen_addr = optarg;
-	break;
+        listen_addr = optarg;
+        break;
       case '?':
       case 'h':
-	printf(_(" Usage: hddtemp [OPTIONS] [TYPE:]DISK1 [[TYPE:]DISK2]...\n"
+        printf(_(" Usage: hddtemp [OPTIONS] [TYPE:]DISK1 [[TYPE:]DISK2]...\n"
 		 "\n"
 		 "   hddtemp displays the temperature of drives supplied in argument.\n"
 		 "   Drives must support S.M.A.R.T.\n"
@@ -391,44 +391,44 @@ int main(int argc, char* argv[]) {
 		 "\n"
 		 "Report bugs or new drives to <hddtemp@guzu.net>.\n"),
 	       PORT_NUMBER);
-	exit(0);
-	break; 
+        exit(0);
+        break;
       case 'v':
-	printf(_("hddtemp version %s\n"), VERSION);
-	exit(0);
-	break; 
+        printf(_("hddtemp version %s\n"), VERSION);
+        exit(0);
+        break;
       case 'n':
         numeric = 1;
         break;
       case 'w':
-	wakeup = 1;
-	break;
+        wakeup = 1;
+        break;
       case 'S':
-	{
-	  char *end = NULL;
+        {
+          char *end = NULL;
 
-	  syslog_interval = strtol(optarg, &end, 10);
+          syslog_interval = strtol(optarg, &end, 10);
 
-	  if(errno == ERANGE || end == optarg || *end != '\0' || syslog_interval < 1) {
-	    fprintf(stderr, _("ERROR: invalid interval.\n"));
-	    exit(1);
-	  }
+          if(errno == ERANGE || end == optarg || *end != '\0' || syslog_interval < 1) {
+            fprintf(stderr, _("ERROR: invalid interval.\n"));
+            exit(1);
+          }
         }
-	break;
+        break;
       case 'F':
         foreground = 1;
-	break;
+        break;
       default:
-	exit(1);
+        exit(1);
       }
   }
-  
+
   if(show_db) {
      load_database(database_path);
      display_supported_drives();
      exit(0);
   }
-  
+
   if(debug) {
     /*    argc = optind + 1;*/
     quiet = 1;
@@ -478,24 +478,24 @@ int main(int argc, char* argv[]) {
 
       /* upper case type */
       for(q = argv[i]; q != p; q++)
-	*q = (char) toupper(*q);
+    *q = (char) toupper(*q);
 
       /* force bus type */
       for(j = 0; j < BUS_TYPE_MAX; j++) {
-	if(bus[j] &&
-	   bus[j]->name &&
-	   strncmp(bus[j]->name, argv[i], p - argv[i] - 1) == 0)
-	  {
-	    dsk->type = j;
-	    break;
-	  }
+        if(bus[j] &&
+           bus[j]->name &&
+           strncmp(bus[j]->name, argv[i], p - argv[i] - 1) == 0)
+          {
+            dsk->type = j;
+            break;
+          }
       }
 
-      dsk->drive = p + 1;      
+      dsk->drive = p + 1;
     }
 
     dsk->next = ldisks;
-    ldisks = dsk;    
+    ldisks = dsk;
 
     errno = 0;
     dsk->errormsg[0] = '\0';
@@ -525,14 +525,14 @@ int main(int argc, char* argv[]) {
       struct harddrive_entry   *dbe;
 
       if(!db_loaded) {
-	load_database(database_path);
-	db_loaded = 1;
-      }      
+        load_database(database_path);
+        db_loaded = 1;
+      }
 
       dsk->db_entry = (struct harddrive_entry *)malloc(sizeof(struct harddrive_entry));
       dbe = is_a_supported_drive(dsk->model);
       if(dbe)
-	memcpy(dsk->db_entry, dbe, sizeof(struct harddrive_entry));
+        memcpy(dsk->db_entry, dbe, sizeof(struct harddrive_entry));
       else {
         dsk->db_entry->regexp       = "";
         dsk->db_entry->description  = "";

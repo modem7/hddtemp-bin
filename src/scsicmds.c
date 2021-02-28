@@ -171,34 +171,34 @@ int scsi_modesense(int device, unsigned char pagenum, unsigned char *buffer, int
 
 int scsi_modeselect(int device, unsigned char *buffer) {
   unsigned char cdb[6];
-  
+
   memset(cdb, 0, sizeof(cdb));
   cdb[0] = MODE_SELECT;
   cdb[1] = 0x11;
   cdb[4] = buffer[0] + 1;
-  
+
   memset(buffer, 0, 12);
   buffer[3]  = 0x08;
   buffer[10] = 0x02;
   buffer[12] &= 0x3f;
-	  
+
   return scsi_command(device, cdb, sizeof(cdb), buffer, cdb[4], SG_DXFER_TO_DEV);
 }
 
 int scsi_logsense(int device, int pagenum, unsigned char *buffer, int buffer_len) {
   unsigned char cdb[10];
-  
+
   memset(cdb, 0, sizeof(cdb));
   cdb[0] = LOG_SENSE;
   cdb[2] = 0x40 | pagenum;
   cdb[7] = 0x04;
-  
+
   return scsi_command(device, cdb, sizeof(cdb), buffer, buffer_len, SG_DXFER_FROM_DEV);
 }
 
 int scsi_smartsupport(int device) {
   unsigned char buf[255];
-	
+
   if (scsi_modesense (device, EXCEPTIONS_CONTROL_PAGE, buf, sizeof(buf)) != 0)
     return 0;
   else

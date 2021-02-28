@@ -80,7 +80,7 @@ static enum e_gettemp scsi_get_temperature(struct disk *dsk) {
     perror("malloc");
     exit(-1);
   }
-  
+
   dsk->db_entry->regexp       = "";
   dsk->db_entry->description  = "";
   dsk->db_entry->attribute_id = 0;
@@ -106,8 +106,8 @@ static enum e_gettemp scsi_get_temperature(struct disk *dsk) {
   }
 
   /*
-    Temp. capable 
-  */  
+    Temp. capable
+  */
   if (scsi_logsense(dsk->fd , SUPPORT_LOG_PAGES, buffer, sizeof(buffer)) != 0) {
     snprintf(dsk->errormsg, MAX_ERRORMSG_SIZE, _("log sense failed : %s"), strerror(errno));
     close(dsk->fd);
@@ -123,14 +123,14 @@ static enum e_gettemp scsi_get_temperature(struct disk *dsk) {
    }
 
    if(tempPage) {
-      /* 
-	 get temperature (from scsiGetTemp (scsicmd.c))
+      /*
+         get temperature (from scsiGetTemp (scsicmd.c))
       */
       if (scsi_logsense(dsk->fd , TEMPERATURE_PAGE, buffer, sizeof(buffer)) != 0) {
-	snprintf(dsk->errormsg, MAX_ERRORMSG_SIZE, _("log sense failed : %s"), strerror(errno));
-	close(dsk->fd);
-	dsk->fd = -1;
-	return GETTEMP_ERROR;
+        snprintf(dsk->errormsg, MAX_ERRORMSG_SIZE, _("log sense failed : %s"), strerror(errno));
+        close(dsk->fd);
+        dsk->fd = -1;
+        return GETTEMP_ERROR;
       }
 
       dsk->value = buffer[9];

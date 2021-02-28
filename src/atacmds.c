@@ -125,7 +125,7 @@ enum e_powermode ata_get_powermode(int device) {
 int ata_get_packet (int device) {
   unsigned short buf[256];
   if (!ioctl(device, HDIO_GET_IDENTITY, buf) && (buf[0] & 0x8000))
-    return 1;	 
-  else	  
+    return 1;
+  else
     return 0;
 }

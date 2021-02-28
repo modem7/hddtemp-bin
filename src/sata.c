@@ -53,21 +53,21 @@
                 (((u16)(__x) & (u16)0xff00U) >> 8) )); \
 })
 
- 
+
 static int sata_probe(int device) {
   int bus_num;
   unsigned char cmd[4] = { WIN_IDENTIFY, 0, 0, 1 };
   unsigned char identify[512];
   unsigned char buf[36]; /* should be 36 for unsafe devices (like USB mass storage stuff)
                         otherwise they can lock up! SPC sections 7.4 and 8.6 */
- 
+
   /* SATA disks are difficult to detect as they answer to both ATA and SCSI 
      commands */
 
   /* First check that the device is accessible through SCSI */
   if(ioctl(device, SCSI_IOCTL_GET_BUS_NUMBER, &bus_num))
     return 0;
-  
+
   /* Get SCSI name and verify it starts with "ATA " */
   if (scsi_inquiry(device, buf))
     return 0;
@@ -84,7 +84,7 @@ static int sata_probe(int device) {
 static const char *sata_model (int device) {
   unsigned char cmd[4] = { WIN_IDENTIFY, 0, 0, 1 };
   unsigned char identify[512];
-  
+
   if(device == -1 || sata_pass_thru(device, cmd, identify))
     return strdup(_("unknown"));
   else
@@ -145,7 +145,7 @@ static enum e_gettemp sata_get_temperature(struct disk *dsk) {
   default:
     break;
   }
-  
+
   /* get SMART values */
   if(sata_enable_smart(dsk->fd) != 0) {
     enum e_gettemp ret;

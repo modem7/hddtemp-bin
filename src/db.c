@@ -80,7 +80,7 @@ static const char *extract_string(char **string) {
   for(; *str; str++) {
     switch(*str) {
       case '"':
-	 return str; 
+         return str; 
          break;
       case '\\':
          str++;
@@ -111,19 +111,19 @@ void display_supported_drives() {
   line = malloc(len+1);
   memset(line, '-', len);
   line[len] = '\0';
-  
+
   printf(_("\n"
-	   "Regexp%s| Value | Description\n"
-	   "------%s---------------------\n"), tabs, line);
+         "Regexp%s| Value | Description\n"
+         "------%s---------------------\n"), tabs, line);
 
   for(p = supported_drives; p; p = p->next) {
     len = strlen(p->regexp);
     printf(_("%s%s| %5d | %s\n"),
-	   p->regexp,
-	   tabs+(len/8),
-	   p->attribute_id,
-	   p->description);
-  }  
+           p->regexp,
+           tabs+(len/8),
+           p->attribute_id,
+           p->description);
+  }
   printf("\n");
 }
 
@@ -192,7 +192,7 @@ static int parse_db_line(char *line) {
     perror("malloc");
     exit(-1);
   }
-  
+
   new_entry->regexp       = strdup(regexp);
   new_entry->description  = strdup(description);
   new_entry->attribute_id = value;
@@ -212,7 +212,7 @@ void free_database(void) {
 
   while( p ) {
     struct harddrive_entry   *q;
-    
+
     if(p->regexp)
       free(p->regexp);
 
@@ -222,7 +222,7 @@ void free_database(void) {
     q = p;
     p = p->next;
     free(q);
-  }    
+  }
 }
 
 void load_database(const char* filename) {
@@ -248,7 +248,7 @@ void load_database(const char* filename) {
       *e = '\0';
       numline++;
       if(parse_db_line(s)) {
-	fprintf(stderr, _("ERROR: syntax error at line %1$d in %2$s\n"), numline, filename);
+        fprintf(stderr, _("ERROR: syntax error at line %1$d in %2$s\n"), numline, filename);
         exit(2);
       }
       s = e+1;

@@ -112,22 +112,22 @@ void daemon_open_sockets(void)
     if (listen(sks_serv[sks_serv_num], 5) == -1) {
       perror("listen");
       for (sks_serv_num-- ; sks_serv_num > 0 ; sks_serv_num--)
-        close(sks_serv[sks_serv_num]);	      
+        close(sks_serv[sks_serv_num]);
       freeaddrinfo(all_ai);
       free(sks_serv);
-      exit(1);	      
+      exit(1);
     }
-    
+
     sks_serv_num++;
   }
-  
+
   if (sks_serv_num == 0) {
     perror("socket");
     free(sks_serv);
     freeaddrinfo(all_ai);
     exit(1);
   }
-    
+
   freeaddrinfo(all_ai);
 }
 
@@ -150,7 +150,7 @@ void daemon_update(struct disk *ldisks, int nocache) {
 
 void daemon_close_sockets(void) {
   int i;
-  
+
   for (i = 0 ; i < sks_serv_num; i++)
     close(sks_serv[i]);
 }
@@ -175,7 +175,7 @@ void daemon_send_msg(struct disk *ldisks, int cfd) {
       n = snprintf(msg, sizeof(msg), "%s%c%s%cUNK%c*",
                    dsk->drive, separator,
                    dsk->model, separator, 
-		   separator);
+                   separator);
       break;
     case GETTEMP_KNOWN:
       n = snprintf(msg, sizeof(msg), "%s%c%s%c%d%c%c",
@@ -215,31 +215,31 @@ void daemon_syslog(struct disk *ldisks) {
   struct disk * dsk;
 
   daemon_update(ldisks, 1);
-  
+
   for(dsk = ldisks; dsk; dsk = dsk->next) {
     switch(dsk->ret) {
     case GETTEMP_KNOWN:
       syslog(LOG_INFO, "%s: %s: %d %c", 
              dsk->drive,
-	     dsk->model,
-	     value_to_unit(dsk),
-	     get_unit(dsk));
+             dsk->model,
+             value_to_unit(dsk),
+             get_unit(dsk));
       break;
     case GETTEMP_DRIVE_SLEEP:
       syslog(LOG_WARNING, _("%s: %s: drive is sleeping"), 
              dsk->drive,
-	     dsk->model);
+             dsk->model);
       break;
     case GETTEMP_NOSENSOR:
     case GETTEMP_UNKNOWN:
       syslog(LOG_WARNING, _("%s: %s: no sensor"), 
              dsk->drive,
-	     dsk->model);
+             dsk->model);
       break;
     case GETTEMP_NOT_APPLICABLE:
       syslog(LOG_ERR, "%s: %s: %s", 
              dsk->drive,
-	     dsk->model,
+             dsk->model,
              dsk->errormsg);
       break;
     default:
@@ -249,7 +249,7 @@ void daemon_syslog(struct disk *ldisks) {
              dsk->errormsg);
       break;
     }
-  }      
+  }
 }
 
 void daemon_stop(int n) {
@@ -293,15 +293,15 @@ if (!foreground) {
   if (chdir("/") != 0)
       exit(1);
   umask(0);
-  
+
   /* close standard input and output */
   close(0);
   close(1);
   close(2);
-  
+
   if (tcp_daemon)
     daemon_open_sockets();
-  
+
   if (syslog_interval > 0)
     openlog("hddtemp", LOG_PID, LOG_DAEMON);
 
@@ -329,14 +329,14 @@ if (!foreground) {
     time_st->tm_year -= 1;
     dsk->last_time = mktime(time_st);
   }
-  
+
   /* initialize file descriptors and compute maxfd */
   FD_ZERO(&deffds);
   maxfd = -1;
-  
+
   for (i = 0 ; i < sks_serv_num; i++) {
     FD_SET(sks_serv[i], &deffds);
-    
+
     if (maxfd < sks_serv[i])
       maxfd = sks_serv[i];
   }
@@ -359,10 +359,10 @@ if (!foreground) {
       tv.tv_usec = 0;
       ret = select(maxfd + 1, &fds, NULL, NULL, &tv);
     }
-    else 
+    else
       ret = select(maxfd + 1, &fds, NULL, NULL, NULL);
-    
-    if (ret == -1) 
+
+    if (ret == -1)
       break;
     else if (ret == 0 && syslog_interval > 0) {
       daemon_syslog(ldisks);
@@ -372,24 +372,24 @@ if (!foreground) {
       struct sockaddr_storage caddr;
       socklen_t sz_caddr;
       sz_caddr = sizeof(struct sockaddr_storage);
-    
+
       for (i = 0 ; i < sks_serv_num; i++) {
         if (FD_ISSET(sks_serv[i], &fds))
           break;
       }
-      
+
       if (i == sks_serv_num)
         continue;
-    
+
       if ((cfd = accept(sks_serv[i], (struct sockaddr *)&caddr, &sz_caddr)) == -1)
         continue;
-   
+
       daemon_send_msg(ldisks, cfd);
-      
+
       close(cfd);
     }
   }
-  
+
   if (tcp_daemon)
     daemon_close_sockets();
 
