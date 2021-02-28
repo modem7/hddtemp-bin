@@ -13,7 +13,8 @@ hddtemp_SOURCES = ata.c ata.h \
 		  scsi.c scsi.h \
 		  scsicmds.c scsicmds.h \
 		  backtrace.c backtrace.h \
-		  utf8.c utf8.h nvme.o
+		  utf8.c utf8.h \
+		  nvme.c nvme.h
 
 hddtemp_CFLAGS = -Wall -W -rdynamic
 
