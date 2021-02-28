@@ -134,8 +134,10 @@ static enum e_bustype probe_bus_type(struct disk *dsk) {
     return BUS_ATA;
   else if(bus[BUS_SCSI]->probe(dsk->fd))
     return BUS_SCSI;
+#ifdef HAVE_LINUX_NVME_IOCTL_H
   else if (bus[BUS_NVME]->probe(dsk->fd))
     return BUS_NVME;
+#endif
   else
     return BUS_UNKNOWN;
 }
