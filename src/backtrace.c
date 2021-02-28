@@ -42,7 +42,7 @@
 #define MAX_BTSIZE 64
 
 void backtrace_handler(int n, siginfo_t *ist, void *extra) {
-  static struct ucontext_t *puc;
+  static ucontext_t *puc;
   static void *btinfo[MAX_BTSIZE];
   static char **messages = NULL;
   static size_t btsize = 0;
@@ -58,7 +58,7 @@ void backtrace_handler(int n, siginfo_t *ist, void *extra) {
 
 #define SIC_CASE(c) case c: strerr = #c ; break
 
-  puc = (struct ucontext_t *)extra;
+  puc = (ucontext_t *)extra;
   switch(n) {
   case SIGSEGV:
     switch(ist->si_code) {
