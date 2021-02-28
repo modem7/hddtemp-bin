@@ -16,13 +16,8 @@ hddtemp_SOURCES = ata.c ata.h \
 		  utf8.c utf8.h nvme.o
 
 hddtemp_CFLAGS = -Wall -W -rdynamic
-#hddtemp_CFLAGS = -Wall -fomit-frame-pointer -rdynamic
-hddtemp_LDADD = @LIBINTL@
 
 localedir = $(datadir)/locale
 
-INCLUDES = -I. -I$(srcdir) -I.. -I../intl -I$(top_srcdir)/intl
+INCLUDES = -I. -I$(srcdir) -I..
 DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
-
-
-

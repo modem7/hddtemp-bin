@@ -11,8 +11,8 @@ EXTRA_DIST = config.rpath  autogen.sh \
              ChangeLog \
              README \
              TODO
-	     
-SUBDIRS = intl po m4 src doc
+
+SUBDIRS = po m4 src doc
 
 CLEANFILES = *~
 
