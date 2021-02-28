@@ -139,6 +139,9 @@ static enum e_gettemp ata_get_temperature(struct disk *dsk) {
   }
   */
 
+  if (debug)
+      ata_print_fields(values);
+
   /* temperature */
   field = ata_search_temperature(values, dsk->db_entry->attribute_id);
   if(!field && dsk->db_entry->attribute_id2 != 0)

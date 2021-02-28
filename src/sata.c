@@ -94,15 +94,25 @@ static const char *sata_model (int device) {
   }
 }
 
+static void sata_print_fields(const unsigned char* smart_data) {
+  int i, n;
+
+  n = 3;
+  i = 0;
+  while(i < 30) {
+    if(*(smart_data + n))
+      printf(_("sata field(%d)\t = %d\n"), *(smart_data + n), *(smart_data + n + 3));
+    n += 12;
+    i++;
+  }
+}
+
 static unsigned char* sata_search_temperature(const unsigned char* smart_data, int attribute_id) {
   int i, n;
 
   n = 3;
   i = 0;
-  while((debug || *(smart_data + n) != attribute_id) && i < 30) {
-    if(debug && *(smart_data + n))
-      printf(_("field(%d)\t = %d\n"), *(smart_data + n), *(smart_data + n + 3));
-
+  while((*(smart_data + n) != attribute_id) && i < 30) {
     n += 12;
     i++;
   }
@@ -164,6 +174,9 @@ static enum e_gettemp sata_get_temperature(struct disk *dsk) {
   for(i = 0; i < 256; i++) {
     swapb(*(p+i));
   }
+
+  if (debug)
+      sata_print_fields(values);
 
   /* temperature */
   field = sata_search_temperature(values, dsk->db_entry->attribute_id);

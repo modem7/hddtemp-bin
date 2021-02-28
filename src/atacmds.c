@@ -58,18 +58,28 @@ int ata_get_smart_values(int device, unsigned char* buff) {
   return 0;
 }
 
+void ata_print_fields(const unsigned char* smart_data) {
+  int i, n;
+
+  n = 3;
+  i = 0;
+  while(i < 30) {
+    if(*(smart_data + n))
+      printf(_("ata field(%d)\t = %d\t(0x%02x)\n"),
+         (int)*(smart_data + n),
+         (int)*(smart_data + n + 3),
+         *(smart_data + n + 3));
+    n += 12;
+    i++;
+  }
+}
+
 unsigned char* ata_search_temperature(const unsigned char* smart_data, int attribute_id) {
   int i, n;
 
   n = 3;
   i = 0;
-  while((debug || *(smart_data + n) != attribute_id) && i < 30) {
-    if(debug && *(smart_data + n))
-      printf(_("field(%d)\t = %d\t(0x%02x)\n"),
-	     (int)*(smart_data + n),
-	     (int)*(smart_data + n + 3),
-	     *(smart_data + n + 3));
-
+  while((*(smart_data + n) != attribute_id) && i < 30) {
     n += 12;
     i++;
   }

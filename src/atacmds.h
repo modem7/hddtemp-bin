@@ -22,6 +22,7 @@
 int ata_enable_smart(int device);
 int ata_get_smart_values(int device, unsigned char* buff);
 unsigned char* ata_search_temperature(const unsigned char* smart_data, int attribute_id);
+void ata_print_fields(const unsigned char* smart_data);
 enum e_powermode ata_get_powermode(int device);
 int ata_get_packet (int device);
 
