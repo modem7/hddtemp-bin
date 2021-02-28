@@ -204,9 +204,9 @@ void daemon_send_msg(struct disk *ldisks, int cfd) {
                    separator);
       break;
     }
-    n = write(cfd, &separator, 1);
-    n = write(cfd, &msg, n);
-    n = write(cfd, &separator, 1);
+    (void)write(cfd, &separator, 1);
+    (void)write(cfd, &msg, n);
+    (void)write(cfd, &separator, 1);
   }
 }
 
