@@ -58,7 +58,7 @@ static int sata_probe(int device) {
   int bus_num;
   unsigned char cmd[4] = { WIN_IDENTIFY, 0, 0, 1 };
   unsigned char identify[512];
-  char buf[36]; /* should be 36 for unsafe devices (like USB mass storage stuff)
+  unsigned char buf[36]; /* should be 36 for unsafe devices (like USB mass storage stuff)
                         otherwise they can lock up! SPC sections 7.4 and 8.6 */
  
   /* SATA disks are difficult to detect as they answer to both ATA and SCSI 
@@ -71,7 +71,7 @@ static int sata_probe(int device) {
   /* Get SCSI name and verify it starts with "ATA " */
   if (scsi_inquiry(device, buf))
     return 0;
-  else if (strncmp(buf + 8, "ATA ", 4))
+  else if (strncmp((char*)(buf + 8), "ATA ", 4))
      return 0;
 
   /* Verify that it supports ATA pass thru */
@@ -90,7 +90,7 @@ static const char *sata_model (int device) {
   else
   {
     sata_fixstring(identify + 54, 40);
-    return strdup(identify + 54);
+    return strdup((char*)(identify + 54));
   }
 }
 

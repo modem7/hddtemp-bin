@@ -63,7 +63,7 @@ static const char *scsi_model (int device) {
   if (scsi_inquiry(device, buf) != 0)
     return strdup(_("unknown"));
   else {
-    return strdup(buf + 8);
+    return strdup((char*)(buf + 8));
   }
 }
 

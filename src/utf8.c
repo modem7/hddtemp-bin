@@ -98,7 +98,7 @@ iconv_error:
 
 char *degree_sign()
 {
-  unsigned char str[] = { 0xc2, 0xb0, 0x00 };
+  char str[] = { 0xc2, 0xb0, 0x00 };
 
   return iconv_from_utf8_to_locale(str, " \0");
 }

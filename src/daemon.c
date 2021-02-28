@@ -204,10 +204,10 @@ void daemon_send_msg(struct disk *ldisks, int cfd) {
                    separator);
       break;
     }
-    write(cfd,&separator, 1);
-    write(cfd, &msg, n);
-    write(cfd,&separator, 1);
-  }      
+    n = write(cfd, &separator, 1);
+    n = write(cfd, &msg, n);
+    n = write(cfd, &separator, 1);
+  }
 }
 
 
@@ -253,6 +253,7 @@ void daemon_syslog(struct disk *ldisks) {
 }
 
 void daemon_stop(int n) {
+  (void)n; /* unused */
   stop_daemon = 1;
 }
 
@@ -289,7 +290,8 @@ if (!foreground) {
       exit(0);
     }
   }
-  chdir("/");
+  if (chdir("/") != 0)
+      exit(1);
   umask(0);
   
   /* close standard input and output */
