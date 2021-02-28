@@ -389,6 +389,7 @@ int main(int argc, char* argv[]) {
 		 "\n"
 		 "Report bugs or new drives to <hddtemp@guzu.net>.\n"),
 	       PORT_NUMBER);
+	exit(0);
 	break; 
       case 'v':
 	printf(_("hddtemp version %s\n"), VERSION);
