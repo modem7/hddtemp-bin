@@ -438,7 +438,8 @@ int main(int argc, char* argv[]) {
 
   memset(&diskglob, 0, sizeof(glob_t));
   if(argc - optind <= 0) {
-    if(glob("/dev/[hs]d[a-z]", 0, NULL, &diskglob) == 0) {
+    int res = glob("/dev/[hs]d[a-z]", 0, NULL, &diskglob);
+    if (glob("/dev/nvme[0-9]n[1-9]", (res ? 0 : GLOB_APPEND), NULL, &diskglob) == 0 || res == 0 ) {
       argc = diskglob.gl_pathc;
       argv = diskglob.gl_pathv;
       optind = 0;
