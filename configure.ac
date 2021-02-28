@@ -18,6 +18,7 @@ AC_PROG_INSTALL
 AC_HEADER_STDC
 AC_CHECK_HEADERS(fcntl.h)
 AC_CHECK_HEADERS(netinet/in.h)
+AC_CHECK_HEADERS(linux/nvme_ioctl.h)
 AC_CHECK_TYPE(in_addr_t, ,[AC_DEFINE_UNQUOTED([in_addr_t], [uint32_t], [Define to 'uint32_t' if <netinet/in.h> does not define.])], [#include <netinet/in.h>])
 
 # Checks for typedefs, structures, and compiler characteristics.

@@ -21,12 +21,15 @@
 #include <config.h>
 #endif
 
+#ifdef HAVE_LINUX_NVME_IOCTL_H
 #include "hddtemp.h"
 #include <sys/ioctl.h>
 #include <linux/nvme_ioctl.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdio.h>
+
 
 struct nvme_smart_log {
   unsigned char  critical_warning;
@@ -144,8 +147,6 @@ struct nvme_id_ctrl {
   unsigned char   vs[1024];
 };
 
-#include <stdio.h>
-
 static int nvme_probe(int fd)
 {
   return (ioctl(fd, NVME_IOCTL_ID, NULL) > 0);
@@ -230,5 +231,4 @@ struct bustype nvme_bus = {
   nvme_model,
   nvme_get_temperature
 };
-
-
+#endif

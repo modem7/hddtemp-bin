@@ -88,7 +88,9 @@ static void init_bus_types() {
   bus[BUS_SATA] = &sata_bus;
   bus[BUS_ATA] = &ata_bus;
   bus[BUS_SCSI] = &scsi_bus;
+#ifdef HAVE_LINUX_NVME_IOCTL_H
   bus[BUS_NVME] = &nvme_bus;
+#endif
 }
 
 /*******************************************************
