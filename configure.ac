@@ -59,7 +59,6 @@ CFLAGS="$CFLAGS -Wall -W -Wcast-align"
 # Substitute configuration variables
 AC_CONFIG_FILES([Makefile \
 po/Makefile.in \
-m4/Makefile \
 src/Makefile \
 doc/Makefile \
 ])
