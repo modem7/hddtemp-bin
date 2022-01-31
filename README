@@ -5,6 +5,16 @@ hddtemp will show you the hard drive temperature if the hard drive can.
 
 Since upstream doesn't handle patches, we will process pull requests here.
 
+INCORPORATED PATCHES
+====================
+ * implement drives auto-detection
+ * use minimal database for drives not covered by defaults
+       * first try S.M.A.R.T. attribute 194, otherwise try attribute 190
+ * add support for NVME bus
+ * added ata-model patch (model is limited to 40 chars, so don't display junk after it)
+ * allow binding to a listen address that doesn't exist yet
+ * add -F --foreground option:  don't daemonize, stay in foreground
+ 
 
 COPYRIGHT
 =========
